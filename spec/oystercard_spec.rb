@@ -21,15 +21,15 @@ describe Oystercard do
   end
   context 'when card has money' do
       before(:each){card.top_up(max_balance)}
-
+      before(:each){card.touch_in}
       it 'raises an error if top_up exceeds maximum balance' do
         expect{ card.top_up(min_fare)}.to raise_error 'maximum balance exceeded'
       end
     end
 
-    describe 'deduct fare' do
-      it 'checks to see if the fare is deducted' do
-        expect{ card.deduct(min_fare) }.to change{ card.balance }.by -min_fare
+    describe 'charges fare on touch out' do
+      it 'checks to see the balance is deducted on touch out' do
+        expect{ card.touch_out }.to change{ card.balance }.by -min_fare
       end
     end
   end
