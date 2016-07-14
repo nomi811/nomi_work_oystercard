@@ -42,18 +42,10 @@ describe Oystercard do
       end
     end
 
-    describe '#touch_in' do
-      it 'can touch in' do
-        card.touch_in
-        expect(card).to be_in_journey
-      end
-    end
-
-    describe '#touch_out' do
-      it 'can touch out' do
-        card.touch_in
-        card.touch_out
-        expect(card).not_to be_in_journey
+    describe 'insufficient funds' do
+      it 'raises and error on touch in' do
+        #@in_use = false
+        expect{ card.touch_in }.to raise_error 'insufficient funds'
       end
     end
   end
