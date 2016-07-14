@@ -6,7 +6,8 @@ describe Oystercard do
   max_balance = Oystercard::MAX_BALANCE
   min_fare = Oystercard::MIN_FARE
 
-  context 'regarding card' do
+
+  context 'when card is out of money' do
     describe 'checks balance' do
       it 'checks to see if the balance is zero' do
         expect(card.balance).to eq 0
@@ -17,16 +18,42 @@ describe Oystercard do
       it 'checks to see if the card is topped up' do
         expect{ card.top_up(min_fare)}.to change{ card.balance }.by min_fare
       end
+  end
+  context 'when card has money' do
+      before(:each){card.top_up(max_balance)}
+
       it 'raises an error if top_up exceeds maximum balance' do
-        card.top_up(max_balance)
         expect{ card.top_up(min_fare)}.to raise_error 'maximum balance exceeded'
       end
     end
 
     describe 'deduct fare' do
       it 'checks to see if the fare is deducted' do
-        card.top_up(max_balance)
         expect{ card.deduct(min_fare) }.to change{ card.balance }.by -min_fare
+      end
+    end
+  end
+
+  context 'regarding journey' do
+
+    describe 'checks to see if the card is in journey or not' do
+      it 'is initially not in a journey' do
+        expect(card).not_to be_in_journey
+      end
+    end
+
+    describe '#touch_in' do
+      it 'can touch in' do
+        card.touch_in
+        expect(card).to be_in_journey
+      end
+    end
+
+    describe '#touch_out' do
+      it 'can touch out' do
+        card.touch_in
+        card.touch_out
+        expect(card).not_to be_in_journey
       end
     end
   end
